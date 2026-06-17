@@ -1,0 +1,583 @@
+<!doctype html>
+<html lang="id" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard Admin | Pojok Network</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['"Plus Jakarta Sans"', "sans-serif"],
+              display: ['"Space Grotesk"', "sans-serif"],
+            },
+            colors: {
+              brand: {
+                900: "#0B1121",
+                800: "#151E32",
+                primary: "#3B82F6",
+                accent: "#F5A623",
+                light: "#F8FAFC",
+              },
+            },
+            animation: {
+              "fade-in": "fadeIn 0.4s ease-out forwards",
+            },
+            keyframes: {
+              fadeIn: {
+                "0%": { opacity: "0", transform: "translateY(10px)" },
+                "100%": { opacity: "1", transform: "translateY(0)" },
+              },
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      body {
+        font-family: "Plus Jakarta Sans", sans-serif;
+        background-color: #0d1428;
+        color: #f8fafc;
+        overflow-x: hidden;
+      }
+      ::-webkit-scrollbar {
+        width: 8px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #0b1121;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #3b82f6;
+        border-radius: 4px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #2563eb;
+      }
+      .glass-card {
+        background: rgba(21, 30, 50, 0.6);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+      }
+      .hover-lift {
+        transition:
+          transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+          box-shadow 0.3s ease;
+      }
+      .hover-lift:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 20px 40px -10px rgba(59, 130, 246, 0.2);
+        border-color: rgba(59, 130, 246, 0.3);
+      }
+    </style>
+  </head>
+  <body class="antialiased selection:bg-brand-primary selection:text-white">
+    <div
+      id="dashboardView"
+      class="flex min-h-screen bg-[#0d1428] text-white font-sans w-full"
+    >
+      <aside
+        class="w-64 bg-brand-800 border-r border-white/5 hidden md:flex flex-col"
+      >
+        <div class="p-6 flex items-center gap-3 border-b border-white/5">
+          <div
+            class="w-8 h-8 bg-brand-primary rounded-lg flex items-center justify-center"
+          >
+            <i class="fa-solid fa-wifi text-white text-sm"></i>
+          </div>
+          <span class="font-display font-bold text-xl text-white tracking-tight"
+            >Pojok<span class="text-brand-primary">Net</span></span
+          >
+        </div>
+        <nav class="flex-1 p-4 space-y-2">
+          <a
+            href="#"
+            data-target="dash-overview"
+            class="dash-nav-item flex items-center gap-3 px-4 py-3 bg-brand-primary/20 text-brand-primary rounded-xl transition-colors font-medium"
+          >
+            <i class="fa-solid fa-chart-pie w-5 text-center"></i> Dashboard
+          </a>
+          <a
+            href="#"
+            data-target="dash-pelanggan"
+            class="dash-nav-item flex items-center gap-3 px-4 py-3 text-gray-400 hover:bg-white/5 hover:text-white rounded-xl transition-colors font-medium"
+          >
+            <i class="fa-solid fa-users w-5 text-center"></i> Data Pelanggan
+          </a>
+          <a
+            href="#"
+            data-target="dash-tiket"
+            class="dash-nav-item flex items-center gap-3 px-4 py-3 text-gray-400 hover:bg-white/5 hover:text-white rounded-xl transition-colors font-medium justify-between"
+          >
+            <div class="flex items-center gap-3">
+              <i class="fa-solid fa-ticket w-5 text-center"></i> Tiket Bantuan
+            </div>
+            <span
+              class="bg-red-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full"
+              >3</span
+            >
+          </a>
+          <a
+            href="#"
+            data-target="dash-tagihan"
+            class="dash-nav-item flex items-center gap-3 px-4 py-3 text-gray-400 hover:bg-white/5 hover:text-white rounded-xl transition-colors font-medium"
+          >
+            <i class="fa-solid fa-wallet w-5 text-center"></i> Tagihan / Invoice
+          </a>
+          <a
+            href="#"
+            data-target="dash-pengaturan"
+            class="dash-nav-item flex items-center gap-3 px-4 py-3 text-gray-400 hover:bg-white/5 hover:text-white rounded-xl transition-colors font-medium"
+          >
+            <i class="fa-solid fa-gear w-5 text-center"></i> Pengaturan
+          </a>
+        </nav>
+        <div class="p-4 border-t border-white/5">
+          <button
+            id="logoutBtn"
+            class="flex items-center gap-3 px-4 py-3 w-full text-red-400 hover:bg-red-500/10 rounded-xl transition-colors font-medium text-left"
+          >
+            <i class="fa-solid fa-right-from-bracket w-5 text-center"></i>
+            Keluar Sistem
+          </button>
+        </div>
+      </aside>
+
+      <main class="flex-1 flex flex-col h-screen overflow-y-auto">
+        <header
+          class="bg-brand-800/80 backdrop-blur-md border-b border-white/5 p-4 sm:px-6 lg:px-8 flex items-center justify-between sticky top-0 z-10"
+        >
+          <div class="flex items-center gap-4">
+            <button class="md:hidden text-gray-400 hover:text-white">
+              <i class="fa-solid fa-bars text-xl"></i>
+            </button>
+            <h1
+              id="dashPageTitle"
+              class="text-xl font-bold font-display tracking-wide flex items-center gap-2"
+            >
+              Dashboard
+              <span
+                class="capitalize text-brand-primary text-sm font-sans ml-2 px-2 py-1 bg-brand-primary/10 rounded"
+                >Admin</span
+              >
+            </h1>
+          </div>
+          <div class="flex items-center gap-5">
+            <button class="text-gray-400 hover:text-white relative">
+              <i class="fa-regular fa-bell text-xl"></i>
+              <span
+                class="absolute -top-1 -right-1 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-brand-800"
+              ></span>
+            </button>
+            <div
+              class="flex items-center gap-3 pl-5 border-l border-white/10 cursor-pointer"
+            >
+              <div class="text-right hidden sm:block">
+                <p
+                  id="dashUsername"
+                  class="text-sm font-bold text-white leading-tight"
+                >
+                  Admin System
+                </p>
+              </div>
+              <div
+                class="w-10 h-10 rounded-full bg-gradient-to-tr from-brand-primary to-blue-400 flex items-center justify-center text-white shadow-lg"
+              >
+                <i class="fa-solid fa-user-shield"></i>
+              </div>
+            </div>
+          </div>
+        </header>
+
+        <div class="p-4 sm:p-6 lg:p-8">
+          <!-- PAGE 1: OVERVIEW -->
+          <div
+            id="dash-overview"
+            class="dash-page space-y-6 block animate-fade-in"
+          >
+            <div
+              class="glass-card p-6 md:p-8 rounded-2xl border border-brand-primary/20 bg-gradient-to-r from-brand-primary/10 to-transparent relative overflow-hidden"
+            >
+              <h2 class="text-2xl md:text-3xl font-display font-bold mb-2">
+                Selamat Bertugas! 👋
+              </h2>
+              <p class="text-gray-400 max-w-2xl">
+                Sistem berjalan normal. Hari ini ada
+                <strong class="text-white">3 pendaftaran baru</strong> dan
+                <strong class="text-brand-accent">3 tiket kendala</strong> yang
+                perlu ditangani.
+              </p>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              <div
+                class="glass-card p-5 rounded-xl border-l-4 border-l-brand-primary flex items-center justify-between"
+              >
+                <div>
+                  <p class="text-sm text-gray-400">Total Pelanggan</p>
+                  <h3 class="text-2xl font-bold text-white mt-1">1,245</h3>
+                </div>
+                <div
+                  class="w-12 h-12 bg-brand-primary/10 rounded-full flex items-center justify-center text-brand-primary text-xl"
+                >
+                  <i class="fa-solid fa-users"></i>
+                </div>
+              </div>
+              <div
+                class="glass-card p-5 rounded-xl border-l-4 border-l-green-500 flex items-center justify-between"
+              >
+                <div>
+                  <p class="text-sm text-gray-400">Pemasukan (Bulan)</p>
+                  <h3 class="text-2xl font-bold text-white mt-1">Rp 128M</h3>
+                </div>
+                <div
+                  class="w-12 h-12 bg-green-500/10 rounded-full flex items-center justify-center text-green-500 text-xl"
+                >
+                  <i class="fa-solid fa-wallet"></i>
+                </div>
+              </div>
+              <div
+                class="glass-card p-5 rounded-xl border-l-4 border-l-red-500 flex items-center justify-between"
+              >
+                <div>
+                  <p class="text-sm text-gray-400">Tunggakan</p>
+                  <h3 class="text-2xl font-bold text-white mt-1">12</h3>
+                </div>
+                <div
+                  class="w-12 h-12 bg-red-500/10 rounded-full flex items-center justify-center text-red-500 text-xl"
+                >
+                  <i class="fa-solid fa-file-invoice-dollar"></i>
+                </div>
+              </div>
+              <div
+                class="glass-card p-5 rounded-xl border-l-4 border-l-brand-accent flex items-center justify-between"
+              >
+                <div>
+                  <p class="text-sm text-gray-400">Tiket Terbuka</p>
+                  <h3 class="text-2xl font-bold text-white mt-1">3</h3>
+                </div>
+                <div
+                  class="w-12 h-12 bg-brand-accent/10 rounded-full flex items-center justify-center text-brand-accent text-xl"
+                >
+                  <i class="fa-solid fa-headset"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- PAGE 2: DATA PELANGGAN -->
+          <div
+            id="dash-pelanggan"
+            class="dash-page space-y-6 hidden animate-fade-in"
+          >
+            <div
+              class="flex flex-col sm:flex-row justify-between items-center gap-4 mb-2"
+            >
+              <div class="relative w-full sm:w-96">
+                <i
+                  class="fa-solid fa-search absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-500"
+                ></i>
+                <input
+                  type="text"
+                  placeholder="Cari ID, Nama..."
+                  class="w-full bg-white/5 border border-white/10 rounded-xl pl-11 pr-4 py-2.5 focus:border-brand-primary outline-none"
+                />
+              </div>
+              <button
+                class="bg-brand-primary px-6 py-2.5 rounded-xl font-bold hover:bg-blue-600 transition-colors"
+              >
+                <i class="fa-solid fa-plus mr-2"></i>Tambah Pelanggan
+              </button>
+            </div>
+            <div
+              class="glass-card rounded-2xl overflow-hidden border border-white/5 overflow-x-auto"
+            >
+              <table class="w-full text-left whitespace-nowrap">
+                <thead class="bg-white/5 text-gray-400 text-sm">
+                  <tr>
+                    <th class="p-4">ID</th>
+                    <th class="p-4">Nama</th>
+                    <th class="p-4">Paket</th>
+                    <th class="p-4">Status</th>
+                    <th class="p-4 text-center">Aksi</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-white/5 text-sm">
+                  <tr class="hover:bg-white/5">
+                    <td class="p-4">PN-101</td>
+                    <td class="p-4 font-bold">Budi Santoso</td>
+                    <td class="p-4">Saung (10Mbps)</td>
+                    <td class="p-4">
+                      <span
+                        class="bg-green-500/20 text-green-400 px-2 py-1 rounded text-xs font-bold"
+                        >Aktif</span
+                      >
+                    </td>
+                    <td class="p-4 text-center text-gray-400">
+                      <i
+                        class="fa-solid fa-pen hover:text-white cursor-pointer mr-3"
+                      ></i
+                      ><i
+                        class="fa-solid fa-ban hover:text-red-400 cursor-pointer"
+                      ></i>
+                    </td>
+                  </tr>
+                  <tr class="hover:bg-white/5">
+                    <td class="p-4">PN-102</td>
+                    <td class="p-4 font-bold">Siti Aminah</td>
+                    <td class="p-4">Guyub (15Mbps)</td>
+                    <td class="p-4">
+                      <span
+                        class="bg-red-500/20 text-red-400 px-2 py-1 rounded text-xs font-bold"
+                        >Isolir</span
+                      >
+                    </td>
+                    <td class="p-4 text-center text-gray-400">
+                      <i
+                        class="fa-solid fa-pen hover:text-white cursor-pointer mr-3"
+                      ></i
+                      ><i
+                        class="fa-solid fa-unlock hover:text-green-400 cursor-pointer"
+                      ></i>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- PAGE 3: TIKET BANTUAN -->
+          <div
+            id="dash-tiket"
+            class="dash-page space-y-6 hidden animate-fade-in"
+          >
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div
+                class="glass-card p-4 rounded-2xl border-t-2 border-brand-accent"
+              >
+                <h3 class="font-bold mb-4">
+                  Menunggu Respon
+                  <span class="bg-white/10 text-xs px-2 py-1 rounded ml-2"
+                    >2</span
+                  >
+                </h3>
+                <div
+                  class="bg-brand-900/50 p-4 rounded-xl border border-white/5 mb-3"
+                >
+                  <span
+                    class="text-xs font-bold bg-red-500/20 text-red-400 px-2 py-1 rounded"
+                    >URGENT</span
+                  >
+                  <h4 class="font-bold text-sm mt-2">LOS Merah di Modem</h4>
+                  <p class="text-xs text-gray-400 mb-3">
+                    PN-101 (Budi) - Jl. Merdeka
+                  </p>
+                  <button
+                    class="w-full text-xs bg-brand-primary/20 text-brand-primary py-2 rounded-lg font-bold hover:bg-brand-primary hover:text-white"
+                  >
+                    Tugaskan Teknisi
+                  </button>
+                </div>
+              </div>
+              <div
+                class="glass-card p-4 rounded-2xl border-t-2 border-brand-primary"
+              >
+                <h3 class="font-bold mb-4">
+                  Sedang Dikerjakan
+                  <span class="bg-white/10 text-xs px-2 py-1 rounded ml-2"
+                    >1</span
+                  >
+                </h3>
+                <div
+                  class="bg-brand-900/50 p-4 rounded-xl border border-white/5"
+                >
+                  <span
+                    class="text-xs font-bold bg-blue-500/20 text-blue-400 px-2 py-1 rounded"
+                    >NORMAL</span
+                  >
+                  <h4 class="font-bold text-sm mt-2">Ganti Password WiFi</h4>
+                  <p class="text-xs text-gray-400 mb-3">
+                    PN-102 (Siti) - Teknisi: Ujang
+                  </p>
+                  <button
+                    class="w-full text-xs bg-green-500/20 text-green-400 py-2 rounded-lg font-bold hover:bg-green-500 hover:text-white"
+                  >
+                    Tandai Selesai
+                  </button>
+                </div>
+              </div>
+              <div
+                class="glass-card p-4 rounded-2xl border-t-2 border-green-500 opacity-70"
+              >
+                <h3 class="font-bold mb-4">Selesai Hari Ini</h3>
+                <div
+                  class="bg-brand-900/50 p-4 rounded-xl border border-white/5"
+                >
+                  <h4 class="font-bold text-sm line-through text-gray-400">
+                    Kabel Putus Kena Pohon
+                  </h4>
+                  <p class="text-xs text-gray-500">10:30 WIB</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- PAGE 4: TAGIHAN -->
+          <div
+            id="dash-tagihan"
+            class="dash-page space-y-6 hidden animate-fade-in"
+          >
+            <div class="glass-card p-6 rounded-2xl overflow-x-auto">
+              <h3 class="font-bold mb-4">Invoice Menunggu Pembayaran</h3>
+              <table class="w-full text-left text-sm whitespace-nowrap">
+                <tr class="text-gray-400 border-b border-white/10">
+                  <th class="pb-3">No. Invoice</th>
+                  <th class="pb-3">Pelanggan</th>
+                  <th class="pb-3">Jumlah</th>
+                  <th class="pb-3">Jatuh Tempo</th>
+                  <th class="pb-3">Aksi</th>
+                </tr>
+                <tr class="border-b border-white/5">
+                  <td class="py-3">INV-001</td>
+                  <td class="py-3">PN-102 (Siti Aminah)</td>
+                  <td class="py-3 font-bold text-brand-accent">Rp 177.500</td>
+                  <td class="py-3 text-red-400">Kemarin</td>
+                  <td class="py-3">
+                    <button
+                      class="bg-brand-primary/20 text-brand-primary px-3 py-1 rounded text-xs font-bold"
+                    >
+                      Kirim WA
+                    </button>
+                  </td>
+                </tr>
+              </table>
+            </div>
+          </div>
+
+          <!-- PAGE 5: PENGATURAN -->
+          <div
+            id="dash-pengaturan"
+            class="dash-page space-y-6 hidden animate-fade-in"
+          >
+            <div class="max-w-2xl glass-card p-6 rounded-2xl">
+              <h3 class="font-bold text-xl mb-6 border-b border-white/10 pb-4">
+                Pengaturan Sistem
+              </h3>
+              <div class="space-y-6">
+                <div class="flex justify-between items-center">
+                  <div>
+                    <h4 class="font-bold">Notifikasi WA Otomatis</h4>
+                    <p class="text-xs text-gray-400">
+                      Kirim tagihan otomatis ke pelanggan.
+                    </p>
+                  </div>
+                  <div
+                    class="w-11 h-6 bg-green-500 rounded-full relative cursor-pointer"
+                  >
+                    <div
+                      class="absolute right-1 top-1 bg-white w-4 h-4 rounded-full"
+                    ></div>
+                  </div>
+                </div>
+                <div class="flex justify-between items-center">
+                  <div>
+                    <h4 class="font-bold">Maintenance Mode</h4>
+                    <p class="text-xs text-gray-400">
+                      Tampilkan halaman perbaikan.
+                    </p>
+                  </div>
+                  <div
+                    class="w-11 h-6 bg-gray-600 rounded-full relative cursor-pointer"
+                  >
+                    <div
+                      class="absolute left-1 top-1 bg-white w-4 h-4 rounded-full"
+                    ></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        // --- 1. DASHBOARD MENU LOGIC (SPA Navigation) ---
+        document.querySelectorAll(".dash-nav-item").forEach((item) => {
+          item.addEventListener("click", (e) => {
+            e.preventDefault();
+            // Ubah class active di sidebar
+            document.querySelectorAll(".dash-nav-item").forEach((n) => {
+              n.classList.remove("bg-brand-primary/20", "text-brand-primary");
+              n.classList.add("text-gray-400");
+            });
+            item.classList.remove("text-gray-400");
+            item.classList.add("bg-brand-primary/20", "text-brand-primary");
+
+            // Update judul atas (Topbar)
+            const pageName = item.innerText.replace(/[0-9]/g, "").trim();
+            document.getElementById("dashPageTitle").innerHTML =
+              `${pageName} <span class="capitalize text-brand-primary text-sm font-sans ml-2 px-2 py-1 bg-brand-primary/10 rounded">Admin</span>`;
+
+            // Tampilkan konten halaman
+            const targetId = item.getAttribute("data-target");
+            document.querySelectorAll(".dash-page").forEach((p) => {
+              p.classList.add("hidden");
+              p.classList.remove("block");
+            });
+            document.getElementById(targetId).classList.remove("hidden");
+            document.getElementById(targetId).classList.add("block");
+          });
+        });
+
+        // --- 2. LOGOUT LOGIC ---
+        const logoutBtn = document.getElementById("logoutBtn");
+        if (logoutBtn) {
+          logoutBtn.addEventListener("click", () => {
+            showToast("Keluar dari dashboard...", "blue");
+            setTimeout(() => {
+              window.location.href = "index.html";
+            }, 1000);
+          });
+        }
+
+        // --- 3. TOAST HELPER ---
+        function showToast(message, type = "green") {
+          const toast = document.createElement("div");
+          const icon = type === "blue" ? "fa-info" : "fa-check";
+          toast.className = `fixed top-24 right-4 glass-card border-l-4 border-l-${type}-500 px-6 py-4 rounded-xl text-white z-[110] transform transition-all duration-300 translate-x-[150%] opacity-0 flex items-center gap-4 shadow-2xl`;
+          toast.innerHTML = `
+            <div class="w-10 h-10 rounded-full bg-${type}-500/20 flex items-center justify-center text-${type}-400">
+                <i class="fa-solid ${icon} text-xl"></i>
+            </div>
+            <div>
+                <h4 class="font-bold text-md">${type === "blue" ? "Informasi" : "Sukses"}</h4>
+                <p class="text-sm text-gray-300">${message}</p>
+            </div>
+          `;
+          document.body.appendChild(toast);
+          setTimeout(
+            () => toast.classList.remove("translate-x-[150%]", "opacity-0"),
+            10,
+          );
+          setTimeout(() => {
+            toast.classList.add("translate-x-[150%]", "opacity-0");
+            setTimeout(() => toast.remove(), 300);
+          }, 3000);
+        }
+      });
+    </script>
+  </body>
+</html>
